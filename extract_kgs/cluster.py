@@ -147,9 +147,10 @@ def extract_single_cluster(items: List[str], item_type: str = "entities") -> Lis
                 {"role": "user", "content": items_text},
             ],
             response_format=ClusterResponse,
-            temperature=0
+            temperature=0,
+	    max_tokens=1000
         )
-        
+       	print(f'completion choices: {completion}') 
         cluster = completion.choices[0].message.parsed.cluster
         if not cluster:
             logger.info(f"No suitable {item_type} clusters found in batch")
@@ -161,7 +162,6 @@ def extract_single_cluster(items: List[str], item_type: str = "entities") -> Lis
         
     except Exception as e:
         logger.error(f"Error extracting cluster: {str(e)}")
-        # raise
         return []
 
 @handle_rate_limit
@@ -473,11 +473,12 @@ def process_file(input_file: str):
 
 if __name__ == "__main__":
     input_files = [
-        # 'kgs/224w_final_deliverable/advil.json',
+        'kgs/224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-Instruct-v0.2.json',
+        'kgs/224w_final_deliverable/advil.json',
         # 'kgs/224w_final_deliverable/cleaned_300_pku-safe-30k-test-gemma-2-9b-it.json',
         # 'kgs/224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-v0.2_no_ann.json',
         # 'kgs/224w_final_deliverable/cleaned_300_pku-safe-30k-gemma-2-9b_no_ann.json',
-        'kgs/224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-Instruct-v0.2.json',
+        # 'kgs/224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-Instruct-v0.2.json',
     ]
     
     for input_file in input_files:
