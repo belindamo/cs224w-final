@@ -74,9 +74,9 @@ def process_json_data(data: dict, filename: str, clusters:dict=None) -> None:
                 relation_dict[mem] = edge['representative']
         edge_set = set()
         for edge in edges:
-            edge[0] = entity_dict[edge[0]]
-            edge[2] = entity_dict[edge[2]]
-            edge[1] = relation_dict[edge[1]]
+            edge[0] = entity_dict[edge[0]] if edge[0] in entity_dict else edge[0]
+            edge[2] = entity_dict[edge[2]] if edge[2] in entity_dict else edge[2]
+            edge[1] = relation_dict[edge[1]] if edge[1] in relation_dict else edge[1]
             edge_set.add(edge[1])
         entities = [ele['representative'] for ele in clusters['entity_clusters']]
         new_graph = {'entities':entities, 'relations': edges, 'edges':list(edge_set)}
@@ -88,13 +88,23 @@ def process_json_data(data: dict, filename: str, clusters:dict=None) -> None:
 
 def main():
     json_files = [
+        "224w_final_deliverable/advil.json",
         # "harmless_base_chosen_test_50.jsonl",
         # "harmless_base_rejected_test_50.jsonl"
-        "224w_final_deliverable/advil.json"
+        "224w_final_deliverable/cleaned_300_pku-safe-30k-gemma-2-9b_no_ann.json",
+        "224w_final_deliverable/cleaned_300_pku-safe-30k-test-gemma-2-9b-it.json",
+        "224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-v0.2_no_ann.json",
+        "224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-Instruct-v0.2.json"
     ]
     
     #Just insert None if there is no cluster available
-    json_clusters = ["224w_final_deliverable/advil_clusters.json"]
+    json_clusters = [
+                    "224w_final_deliverable/advil_clusters.json",
+                     "224w_final_deliverable/cleaned_300_pku-safe-30k-gemma-2-9b_no_ann_clusters.json",
+                     "224w_final_deliverable/cleaned_300_pku-safe-30k-test-gemma-2-9b-it_clusters.json",
+                     "224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-v0.2_no_ann_clusters.json",
+                     "224w_final_deliverable/cleaned_300_pku-safe-30k-test-Mistral-7B-Instruct-v0.2_clusters.json"
+                     ]
     
     
     for filename, cluster_filename in zip(json_files, json_clusters):
